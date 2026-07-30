@@ -14,7 +14,7 @@ import {
   serverTimestamp,
   Firestore
 } from 'firebase/firestore';
-import { FIREBASE_CONFIG } from '../config/firebase-config.template';
+import { FIREBASE_CONFIG } from '../config/firebase-config';
 import { AuthService } from '../auth/auth.service';
 import { Proposal } from './proposal.model';
 
