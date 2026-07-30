@@ -11,7 +11,7 @@ import {
   Auth
 } from 'firebase/auth';
 import { FIREBASE_CONFIG } from '../config/firebase-config.template';
-import { isFeatureEnabled } from '../config/featuresflag';
+import { isFeatureEnabled, FeatureFlag } from '../config/featureflags';
 
 const REQUIRED_CONFIG_FIELDS: (keyof typeof FIREBASE_CONFIG)[] = [
   'apiKey',
@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   public get isAuthEnabled(): boolean {
-    return isFeatureEnabled('EnableAuth');
+    return isFeatureEnabled(FeatureFlag.EnableAuth);
   }
 
   private validateAndInitialize(): void {
