@@ -10,8 +10,8 @@
     <a href='https://data-city.my.canva.site/terms' target='_blank'>מדיניות שימוש</a>
 </div>
 
-<!-- Single Avatar / Profile Image Button triggering Dropdown Menu -->
-<div class="user-auth-avatar">
+<!-- Single Avatar / Profile Image Button triggering Dropdown Menu (only if EnableAuth is enabled) -->
+<div class="user-auth-avatar" *ngIf="isAuthEnabled">
     <button type="button" mat-icon-button [matMenuTriggerFor]="authMenu" aria-label="תפריט אימות משתמש" class="avatar-menu-btn" [matTooltip]="currentUser ? (currentUser.displayName || currentUser.email || 'משתמש מחובר') : (configError || 'התחבר למערכת')">
         <img *ngIf="currentUser && currentUser.photoURL && !imageError" [src]="currentUser.photoURL" (error)="onImageError()" referrerpolicy="no-referrer" alt="תמונת משתמש" class="profile-img" />
         <mat-icon *ngIf="!currentUser || !currentUser.photoURL || imageError" class="avatar-icon">

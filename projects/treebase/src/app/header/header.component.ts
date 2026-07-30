@@ -18,6 +18,10 @@ export class HeaderComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
+  get isAuthEnabled(): boolean {
+    return this.authService.isAuthEnabled;
+  }
+
   get isConfigValid(): boolean {
     return this.authService.isConfigValid;
   }
@@ -42,6 +46,9 @@ export class HeaderComponent implements OnInit {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
+    }
+    if (!this.isAuthEnabled) {
+      return;
     }
     if (!this.isConfigValid) {
       this.snackBar.open('auth configuration error', 'סגור', { duration: 4000 });
