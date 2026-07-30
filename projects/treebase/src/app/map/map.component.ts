@@ -77,6 +77,15 @@ export class MapComponent implements AfterViewInit{
     this.map = new mapboxgl.Map(mapParams);
     this.map.addControl(new mapboxgl.AttributionControl(), 'top-right');
     this.map.addControl(new mapboxgl.NavigationControl({showCompass: false}), 'top-left');
+    const geolocate = new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true
+      },
+      trackUserLocation: true,
+      showUserLocation: true,
+      showUserHeading: true
+    });
+    this.map.addControl(geolocate, 'top-left');
     const draw = new MapboxDraw({defaultMode: 'draw_polygon', controls: {polygon: true, trash: false, line_string: false, point: false, combine_features: false, uncombine_features: false}});
     this.map.addControl(draw, 'top-left');
     draw.trash();
