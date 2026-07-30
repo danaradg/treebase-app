@@ -26,6 +26,11 @@ import { SearchComponent } from './search/search.component';
 import { ShareComponent } from './share/share.component';
 import { ExportComponent } from './export/export.component';
 
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,6 +59,10 @@ import { ExportComponent } from './export/export.component';
     HttpClientModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
     BrowserAnimationsModule,
   ],
   providers: [],
