@@ -10,7 +10,7 @@ import {
   User,
   Auth
 } from 'firebase/auth';
-import { FIREBASE_CONFIG } from '../config/firebase-config.template';
+import { FIREBASE_CONFIG } from '../config/firebase-config';
 import { isFeatureEnabled, FeatureFlag } from '../config/featureflags';
 
 const REQUIRED_CONFIG_FIELDS: (keyof typeof FIREBASE_CONFIG)[] = [
