@@ -1,29 +1,18 @@
-export interface ProposalAttribute {
-  key: string;
-  title?: string;
-  value: any;
-  type?: string;
-  unit?: string;
+export interface FieldChange {
+  field: string;
+  fromValue: any;
+  toValue: any;
 }
 
-export interface Proposal {
+export interface TreeProposal {
   id?: string;
-  title: string;
-  description: string;
-  authorName?: string;
-  authorEmail?: string;
-  authorPhone?: string;
+  treeId: string;
+  changes: FieldChange[];
+  createdAt: string;
+  status: 'pending' | 'accepted' | 'rejected' | string;
+  proposer?: string | null;
+  approver?: string | null;
   submittedBy?: string;
-  submittedByEmail?: string;
-  proposalType?: 'species_correction' | 'location_correction' | 'missing_trees' | 'tree_health' | 'Verified' | 'verified' | 'other' | string;
-  status: 'draft' | 'pending' | 'approved' | 'rejected' | 'OPEN' | 'CLOSED' | string;
-  muniCode?: string;
-  muniName?: string;
-  address?: string;
-  treeId?: string;
-  photoUrl?: string;
-  attributes?: ProposalAttribute[];
-  proposedChanges?: ProposalAttribute[];
-  createdAt?: any;
+  submittedByEmail?: string | null;
   updatedAt?: any;
 }
