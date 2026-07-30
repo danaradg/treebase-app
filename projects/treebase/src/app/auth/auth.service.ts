@@ -11,7 +11,7 @@ import {
   Auth
 } from 'firebase/auth';
 import { FIREBASE_CONFIG } from '../config/firebase-config.template';
-import { isFeatureEnabled } from '../config/FeatureFlag';
+import { isFeatureEnabled } from '../config/featuresflag';
 
 const REQUIRED_CONFIG_FIELDS: (keyof typeof FIREBASE_CONFIG)[] = [
   'apiKey',
