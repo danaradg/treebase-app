@@ -1,11 +1,11 @@
 export enum FeatureFlag {
   EnableAuth = 'EnableAuth',
-  EnableProposalApproval = 'EnableProposalApproval'
+  EnableTreeEditing = 'EnableTreeEditing'
 }
 
 export const FeatureFlags: Record<FeatureFlag, boolean> = {
   [FeatureFlag.EnableAuth]: true,
-  [FeatureFlag.EnableProposalApproval]: true
+  [FeatureFlag.EnableTreeEditing]: true
 };
 
 /**
