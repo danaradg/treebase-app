@@ -10,7 +10,8 @@ import {
   User,
   Auth
 } from 'firebase/auth';
-import { FIREBASE_CONFIG } from '../config/firebase-config';
+import { FIREBASE_CONFIG } from '../config/firebase-config.template';
+import { isFeatureEnabled } from '../config/FeatureFlag';
 
 const REQUIRED_CONFIG_FIELDS: (keyof typeof FIREBASE_CONFIG)[] = [
   'apiKey',
@@ -37,7 +38,18 @@ export class AuthService {
     this.validateAndInitialize();
   }
 
+  public get isAuthEnabled(): boolean {
+    return isFeatureEnabled('EnableAuth');
+  }
+
   private validateAndInitialize(): void {
+    if (!this.isAuthEnabled) {
+      console.info('[AuthService] EnableAuth feature flag is disabled. Auth service loaded in disabled mode.');
+      this.isConfigValid = false;
+      this.configError = null;
+      return;
+    }
+
     const configToValidate = (window as any).FIREBASE_CONFIG || FIREBASE_CONFIG;
 
     if (!configToValidate) {
@@ -81,7 +93,7 @@ export class AuthService {
   }
 
   public ensureAuthenticated(): Observable<User> {
-    if (!this.isConfigValid || !this.auth) {
+    if (!this.isAuthEnabled || !this.isConfigValid || !this.auth) {
       return of({ uid: 'anonymous-guest', isAnonymous: true } as User);
     }
 
@@ -98,6 +110,9 @@ export class AuthService {
   }
 
   loginWithGoogle(): Observable<User> {
+    if (!this.isAuthEnabled) {
+      throw new Error('Authentication is disabled by feature flag.');
+    }
     if (!this.isConfigValid || !this.auth) {
       throw new Error(this.configError || 'auth configuration error');
     }
