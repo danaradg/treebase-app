@@ -13,7 +13,7 @@
 
 <!-- Single Avatar / Profile Image Button triggering Dropdown Menu -->
 <div class="user-auth-avatar">
-    <button type="button" mat-icon-button [matMenuTriggerFor]="authMenu" aria-label="תפריט אימות משתמש" class="avatar-menu-btn" [matTooltip]="currentUser ? (currentUser.displayName || currentUser.email || 'משתמש מחובר') : 'התחבר למערכת'">
+    <button type="button" mat-icon-button [matMenuTriggerFor]="authMenu" aria-label="תפריט אימות משתמש" class="avatar-menu-btn" [matTooltip]="currentUser ? (currentUser.displayName || currentUser.email || 'משתמש מחובר') : (configError || 'התחבר למערכת')">
         <img *ngIf="currentUser && currentUser.photoURL && !imageError" [src]="currentUser.photoURL" (error)="onImageError()" referrerpolicy="no-referrer" alt="תמונת משתמש" class="profile-img" />
         <mat-icon *ngIf="!currentUser || !currentUser.photoURL || imageError" class="avatar-icon">
             {{ currentUser ? 'account_circle' : 'person_outline' }}
@@ -37,11 +37,12 @@
         <ng-template #loggedOutMenu>
             <div class="login-header-title" (click)="$event.stopPropagation()">
                 <div class="login-title-text">התחברות למערכת</div>
-                <div class="login-notice">ההתחברות נדרשת רק לשם עריכת וטיוב נתונים, ולא לצפייה.</div>
+                <div class="login-notice" *ngIf="isConfigValid">ההתחברות נדרשת רק לשם עריכת וטיוב נתונים, ולא לצפייה.</div>
+                <div class="login-error-notice" *ngIf="!isConfigValid">{{ configError }}</div>
             </div>
-            <button type="button" mat-menu-item (click)="loginWithGoogle($event)" [disabled]="authLoading">
+            <button type="button" mat-menu-item (click)="loginWithGoogle($event)" [disabled]="!isConfigValid || authLoading">
                 <mat-icon>login</mat-icon>
-                <span>התחבר באמצעות Google</span>
+                <span>{{ isConfigValid ? 'התחבר באמצעות Google' : (configError || 'auth configuration error') }}</span>
             </button>
         </ng-template>
     </mat-menu>

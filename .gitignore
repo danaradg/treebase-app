@@ -43,5 +43,4 @@ Thumbs.db
 
 # Secrets & Local Configurations
 *.secret.ts
-projects/treebase/src/app/proposals/firebase-config.secret.ts
 

@@ -18,6 +18,14 @@ export class HeaderComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
+  get isConfigValid(): boolean {
+    return this.authService.isConfigValid;
+  }
+
+  get configError(): string | null {
+    return this.authService.configError;
+  }
+
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
       this.currentUser = user;
@@ -34,6 +42,10 @@ export class HeaderComponent implements OnInit {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
+    }
+    if (!this.isConfigValid) {
+      this.snackBar.open('auth configuration error', 'סגור', { duration: 4000 });
+      return;
     }
     this.authLoading = true;
     this.authService.loginWithGoogle().subscribe({

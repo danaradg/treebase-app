@@ -83,6 +83,15 @@ html, body {
             line-height: 1.35;
             white-space: normal;
         }
+
+        .login-error-notice {
+            font-size: 11px;
+            color: #ffcdd2;
+            margin-top: 4px;
+            font-weight: 600;
+            line-height: 1.35;
+            white-space: normal;
+        }
     }
 
     .mat-mdc-menu-item, .mat-menu-item {
@@ -91,13 +100,23 @@ html, body {
         font-size: 14px !important;
         font-weight: 500 !important;
 
+        &[disabled] {
+            opacity: 0.6 !important;
+            color: #838383 !important;
+            cursor: not-allowed !important;
+
+            .mat-icon, mat-icon {
+                color: #838383 !important;
+            }
+        }
+
         .mat-icon, mat-icon {
             color: #204E37 !important;
             margin-left: 8px !important;
             margin-right: 0 !important;
         }
 
-        &:hover, &:focus {
+        &:hover:not([disabled]), &:focus:not([disabled]) {
             background-color: #D1EADA !important;
         }
     }
