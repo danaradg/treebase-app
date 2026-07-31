@@ -3,7 +3,7 @@ export enum FeatureFlag {
 }
 
 export const FeatureFlags: Record<FeatureFlag, boolean> = {
-  [FeatureFlag.EnableAuth]: true
+  [FeatureFlag.EnableAuth]: false
 };
 
 /**

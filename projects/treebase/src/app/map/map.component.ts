@@ -8,6 +8,8 @@ import { ApiService } from '../api.service';
 import * as MapboxDraw from '@mapbox/mapbox-gl-draw';
 import { Subject, debounceTime, distinct, distinctUntilChanged } from 'rxjs';
 import { PopupLayerItem, PopupLayers } from '../states/base-state';
+import { ProposalsService } from '../proposals/proposals.service';
+import { TREE_COLOR_INTERPOLATE } from '../states/consts-trees';
 
 @UntilDestroy()
 @Component({
@@ -55,7 +57,8 @@ export class MapComponent implements AfterViewInit{
   popupLayers: PopupLayers = {};
 
   constructor(private mapboxService: MapboxService, private state: StateService,
-              private router: Router, private api: ApiService) {
+              private router: Router, private api: ApiService,
+              private proposalsService: ProposalsService) {
   }
 
   ngAfterViewInit() {
@@ -263,8 +266,57 @@ export class MapComponent implements AfterViewInit{
           this.router.navigate(['/trees'], {queryParamsHandling: 'preserve'});
         }
       });
+      this.proposalsService.proposalsUpdated$.pipe(
+        untilDestroyed(this)
+      ).subscribe(() => {
+        this.updateMapProposalsState();
+      });
+      this.updateMapProposalsState();
+
       this.mapboxService.map = this.map;
     });
+  }
+
+  updateMapProposalsState(): void {
+    if (!this.map || !this.map.isStyleLoaded() || !this.map.getLayer('trees')) return;
+
+    const allProps = this.proposalsService.getAllProposals();
+    const confirmedTreeIds = new Set<string>();
+    const unconfirmedTreeIds = new Set<string>();
+
+    for (const p of allProps) {
+      const certaintyChange = p.changes.find(c => c.field === 'certainty' || c.field === 'attributes-certainty');
+      if (certaintyChange) {
+        if (Boolean(certaintyChange.toValue) === true) {
+          confirmedTreeIds.add(String(p.treeId).trim());
+          unconfirmedTreeIds.delete(String(p.treeId).trim());
+        } else {
+          unconfirmedTreeIds.add(String(p.treeId).trim());
+          confirmedTreeIds.delete(String(p.treeId).trim());
+        }
+      }
+    }
+
+    const confirmedList = Array.from(confirmedTreeIds);
+    const unconfirmedList = Array.from(unconfirmedTreeIds);
+
+    let colorExpression: any = TREE_COLOR_INTERPOLATE;
+    if (confirmedList.length > 0 || unconfirmedList.length > 0) {
+      colorExpression = [
+        'case',
+        ['in', ['get', 'tree-id'], ['literal', confirmedList]],
+        ['to-color', '#204E37'],
+        ['in', ['get', 'tree-id'], ['literal', unconfirmedList]],
+        ['to-color', '#64B883'],
+        TREE_COLOR_INTERPOLATE
+      ];
+    }
+
+    try {
+      this.map.setPaintProperty('trees', 'circle-color', colorExpression);
+    } catch (e) {
+      console.warn('[MapComponent] Failed to set trees layer color expression:', e);
+    }
   }
 
   ownLayer(layer: mapboxgl.AnyLayer) {
